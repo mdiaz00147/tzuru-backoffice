@@ -11,6 +11,7 @@ import router from './router'
 
 // todo
 // cssVars()
+export const serverBus = new Vue();
 
 Vue.use(BootstrapVue)
 

@@ -470,6 +470,18 @@ export default {
     SocialBoxChartExample,
     CalloutChartExample
   },
+
+  mounted(){
+    let options = {
+      position:'top-right', 
+      duration: 5000,
+      type: 'success',
+      closeOnSwipe: true
+    }
+    if (this.$route.query.auth && JSON.parse(this.$route.query.auth))  this.$toasted.show("Welcome back", options)
+    if (this.$route.query.a && JSON.parse(this.$route.query.a))  this.$toasted.show("Welcome to Tzuru!", options)
+  },
+
   data: function () {
     return {
       selected: 'Month',
@@ -548,6 +560,7 @@ export default {
       }
     }
   },
+
   methods: {
     variant (value) {
       let $variant
