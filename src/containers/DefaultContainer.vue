@@ -11,15 +11,10 @@
         <b-dropdown variant="link" no-caret>
           <template slot="button-content">
             <i class="icon-bell" style="color:black"></i>
-            <b-badge pill variant="danger">5</b-badge>
+            <b-badge pill variant="danger">0</b-badge>
           </template>
           <b-dropdown-header>Notifications</b-dropdown-header>
-          <b-dropdown-item>First Action</b-dropdown-item>
-          <b-dropdown-item>Second Action</b-dropdown-item>
-          <b-dropdown-item>Third Action</b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item>Something else here...</b-dropdown-item>
-          <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+          <b-dropdown-item disabled>Ther is not notifications</b-dropdown-item>
         </b-dropdown>
         <DefaultHeaderDropdownAccnt/>
       </b-navbar-nav>

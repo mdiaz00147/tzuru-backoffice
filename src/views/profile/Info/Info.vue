@@ -23,7 +23,7 @@
       <b-col sm="8">
         <b-form-group>
           <label for="city">Street</label>
-          <b-form-input type="text"  placeholder="Phone" :value="user.phone" v-model="form.phone"></b-form-input>
+          <b-form-input type="text"  placeholder="Phone" ></b-form-input>
         </b-form-group>
       </b-col>
       <b-col sm="4">
@@ -49,70 +49,31 @@
 <script>
 import config from '@/config/settings'
 import axios from 'axios'
+import { serverBus } from '@/main'
 
 export default {
-  name:'Info',
+  name:'info',
+  props:{
+    user:{
+      type: Object
+    }
+  },
+
   data() {
     return{
       loading: false,
-      user: {},
       form: {}
     }
   },
 
-  mounted(){
-    this.getUser()
+  created(){
+    serverBus.$on('profileLoading', (val) => this.loading = val)
   },
 
   methods: {
     updateUser(evt){
       evt.preventDefault()
-      this.loading = true
-      axios.put(config.defaultURL + '/api/v1/desk/users/' + this.user.id, this.form, {
-        headers: {
-          "content-type": "application/json",
-          Authorization: localStorage.getItem("auth_token")
-        }
-      })
-      .then(response => {
-        if (response.status == 200) {
-          this.loading = false
-          this.$toasted.show('User updated', { 
-            position:'top-right', 
-            duration: 5000,
-            type: 'success',
-            closeOnSwipe: true
-          })
-          this.getUser()
-        }
-      })
-      .catch((error) => {
-        this.loading = false
-        error.response.data.map((m) => { 
-          this.$toasted.show(m, { 
-            position:'top-right', 
-            duration: 5000,
-            type: 'error',
-            closeOnSwipe: true
-          })
-        })
-      })
-    },
-
-    getUser(){
-      axios.get(config.defaultURL + '/api/v1/desk/users/' + config.userData().uuid, {
-        headers: {
-          "content-type": "application/json",
-          Authorization: localStorage.getItem("auth_token")
-        }
-      })
-      .then(response => {
-        if (response.status == 200) {
-          this.user = response.data
-        }
-      })
-      .catch((error) => {
-      })
+      serverBus.$emit('profileUpdateUser', this.form, 'User updated')
     }
   }
 }

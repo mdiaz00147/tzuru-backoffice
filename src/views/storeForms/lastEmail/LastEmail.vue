@@ -63,7 +63,6 @@ export default {
       this.show  = true
       this.messageContent = JSON.parse(server.message)
       this.serverLog      = JSON.parse(server.server_log)
-      console.log(server)
     })
   }
 }

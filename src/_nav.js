@@ -15,17 +15,17 @@ export default {
     {
       name: 'Forms',
       url: '/store/forms',
-      icon: 'icon-user'
+      icon: 'icon-bubble'
     },
     {
       name: 'Menus',
       url: '/store/menus',
-      icon: 'icon-user'
+      icon: 'icon-list'
     },
     {
       name: 'Sections',
       url: '/store/sections',
-      icon: 'icon-user'
+      icon: 'icon-grid'
     },
     {
       title: true,
@@ -34,36 +34,37 @@ export default {
     {
       name: 'Customers',
       url: '/theme/colors',
-      icon: 'icon-user'
+      icon: 'icon-people'
     },
     {
       title: true,
       name: 'ERP & COMMERCE'
     },
     {
-      name: 'Providers',
-      url: '/theme/colors',
-      icon: 'icon-user'
-    },
-    {
       name: 'Inventory',
-      url: '/theme/colors',
-      icon: 'icon-user'
+      url: '/inventory/list',
+      icon: 'icon-screen-tablet',
+      variant:'rrrrr'
     },
-    {
-      name: 'Sales',
-      url: '/theme/colors',
-      icon: 'icon-user'
-    },
-    {
-      name: 'Reports',
-      url: '/theme/colors',
-      icon: 'icon-user'
-    },
-    {
-      name: 'Payments',
-      url: '/theme/colors',
-      icon: 'icon-user'
-    }
+    // {
+    //   name: 'Providers',
+    //   url: '/theme/colors',
+    //   icon: 'icon-user'
+    // },
+    // {
+    //   name: 'Sales',
+    //   url: '/theme/colors',
+    //   icon: 'icon-user'
+    // },
+    // {
+    //   name: 'Reports',
+    //   url: '/theme/colors',
+    //   icon: 'icon-user'
+    // },
+    // {
+    //   name: 'Payments',
+    //   url: '/theme/colors',
+    //   icon: 'icon-user'
+    // }
   ]
 }

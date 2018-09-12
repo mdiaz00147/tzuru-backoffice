@@ -16,11 +16,16 @@ function userStore(){
   return JSON.parse(localStorage.getItem("store"))
 }
 
+function setUser(val){
+  return localStorage.setItem("user", JSON.stringify(val))
+}
+
 const conf = {
   defaultURL,
   logout,
   userData,
-  userStore
+  userStore,
+  setUser
 }
 
 export default conf;

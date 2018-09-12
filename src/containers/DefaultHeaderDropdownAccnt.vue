@@ -2,8 +2,8 @@
   <AppHeaderDropdown right no-caret>
     <template slot="header">
       <img
-        src="img/avatars/6.jpg"
-        class="img-avatar"
+        :src="avatar"
+        class="img-avatar custom-avatar"
         alt="admin@bootstrapmaster.com" 
         />
     </template>\
@@ -23,12 +23,17 @@
   </AppHeaderDropdown>
 </template>
 
+<style>
+  .custom-avatar {
+    width: 35px;
+    height: 35px;
+  }
+</style>
+
 <script>
 import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
 import config from '@/config/settings'
-// import { serverBus } from '@/main'
-// import axios from 'axios'
-
+import { serverBus } from '@/main'
 
 export default {
   name: 'DefaultHeaderDropdownAccnt',
@@ -37,11 +42,20 @@ export default {
   },
 
   data: () => {
-    return { itemsCount: 42 }
+    return { 
+      itemsCount: 42,
+      avatar: ''
+    }
+  },
+
+  created(){
+    serverBus.$on('userUpdated', (val) => {
+      this.avatar = val.avatar['thumb']
+    })
   },
 
   mounted(){
-    // this.getUser()
+    this.avatar = config.userData().avatar['thumb']
   },
 
   methods: {

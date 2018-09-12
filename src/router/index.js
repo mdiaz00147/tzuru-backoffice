@@ -17,6 +17,8 @@ const Subscription  = () => import('@/views/subscription/Subscription')
 const StoreForms  = () => import('@/views/storeForms/StoreForms')
 const StoreMenus  = () => import('@/views/storeMenus/StoreMenus')
 const StoreSections  = () => import('@/views/storeSections/StoreSections')
+const InventoryList  = () => import('@/views/inventory/List/List')
+const InventoryNew = () => import('@/views/inventory/New/New')
 
 Vue.use(Router)
 
@@ -91,6 +93,30 @@ export default new Router({
             label: 'Website Sections'
           }
         }
+      ]
+    },
+    {
+      path: '/inventory',
+      name: 'ERP',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'list',
+          name: 'InventoryList',
+          component: InventoryList,
+          meta: {
+            label: 'Store Inventory'
+          }
+        },
+        {
+          path: 'new',
+          name: 'InventoryNew',
+          component: InventoryNew,
+          meta: {
+            label: 'New Inventory'
+          }
+        }
+
       ]
     },
     {

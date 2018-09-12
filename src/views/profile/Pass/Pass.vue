@@ -38,6 +38,7 @@
 <script>
 import axios from 'axios'
 import config from '@/config/settings'
+import { serverBus } from '@/main'
 
 export default {
   data() {
@@ -51,39 +52,15 @@ export default {
   updated(){
     if(this.form.password && this.form.password_confirmation) this.disabled = false
   },
+  
+  created(){
+    serverBus.$on('profileLoading', (val) => this.loading = val)
+  },
 
-  methods:{
+  methods: {
     updateUser(evt){
       evt.preventDefault()
-      this.loading = true
-      axios.put(config.defaultURL + '/api/v1/desk/users/' + config.userData().id, this.form, {
-        headers: {
-          "content-type": "application/json",
-          Authorization: localStorage.getItem("auth_token")
-        }
-      })
-      .then(response => {
-        if (response.status == 200) {
-          this.loading = false
-          this.$toasted.show('Password updated', { 
-            position:'top-right', 
-            duration: 5000,
-            type: 'success',
-            closeOnSwipe: true
-          })
-        }
-      })
-      .catch((error) => {
-        this.loading = false
-        error.response.data.map((m) => { 
-          this.$toasted.show(m, { 
-            position:'top-right', 
-            duration: 5000,
-            type: 'error',
-            closeOnSwipe: true
-          })
-        })
-      })
+      serverBus.$emit('profileUpdateUser', this.form, 'Password updated')
     }
   }
 }
