@@ -15,8 +15,52 @@
         :current-page="currentPage" 
         :per-page="perPage"
       >
+        <template slot="id" slot-scope="data">
+          <div class="custom-control custom-checkbox ">
+            <input type="checkbox" class="custom-control-input" value="1" >
+            <label class="custom-control-label" for="customChk1"></label>
+          </div>
+        </template>
+
+        <template slot="name" slot-scope="data">
+          <p>{{data.item.name}}</p>
+          <p><strong>Stock quntity:</strong> {{data.item.stock_quantity}}</p>
+          <p><strong>Price:</strong>  ${{data.item.price}}</p>
+          <div v-if="data.item.promo_price">
+            <span  class="badge badge-success">Promo price:</span> ${{data.item.promo_price}}
+          </div>
+
+        </template>
         <template slot="image" slot-scope="data">
           <img  class="img-thumbnail rounded product__list-image" :src="data.item.images[0].thumb" />
+        </template>
+        
+        <template slot="created_at" slot-scope="data">
+          <b-row class="d-flex align-items-center">
+            <b-form-group
+              class="col-12"
+              label-sr-only
+              >
+              <b-form-checkbox-group stacked>
+                <div class="custom-control custom-checkbox ">
+                  <input type="checkbox" class="custom-control-input" value="1"   >
+                  <label class="custom-control-label" for="customChk1">Product published</label>
+                </div>
+                <div class="custom-control custom-checkbox ">
+                  <input type="checkbox" class="custom-control-input" value="2"  >
+                  <label class="custom-control-label" for="customChk2">Product featured</label>
+                </div>
+              </b-form-checkbox-group>
+            </b-form-group>
+          </b-row>
+        </template>
+
+        <template slot="action" slot-scope="data">
+          <router-link tag="button" :to="'/inventory/edit/' + data.item.uuid" class="btn btn-sm btn-primary">
+            Details   <i class="fa fa-list"/>
+          </router-link>
+          <br>
+          <button class="btn btn-sm btn-warning mt-1" >Variants <i class="fa fa-plus"/></button>
         </template>
       </b-table>
       <nav >
@@ -26,10 +70,15 @@
   </div>
 </template>
 
-<style scoped>
+<style >
   .product__list-image {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
+  }
+
+  .table__column-id {
+    max-width: 20px !important;
+    text-align: center
   }
 </style>
 
@@ -72,10 +121,11 @@ export default {
     return {
       items: [],
       fields: [
+        {key: 'id', sortable: true, label: 'ID', class:'table__column-id'},
         {key: 'image', sortable: false},
         {key: 'name', sortable: true},
-        {key: 'created_at' , sortable: true},
-        {key:'id', label: 'Action' }
+        {key: 'created_at' , label: '' },
+        {key: 'action', label: 'Action' }
       ],
       currentPage: 1,
       perPage: 15,

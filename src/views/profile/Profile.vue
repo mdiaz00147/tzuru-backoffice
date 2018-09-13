@@ -46,7 +46,8 @@ export default {
   data(){
     return{
       user: {
-        avatar: "http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+        avatar: "http://ssl.gstatic.com/accounts/ui/avatar_2x.png",
+        address: {}
       }
     }
   },

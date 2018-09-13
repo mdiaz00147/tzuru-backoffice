@@ -20,23 +20,38 @@
           <b-form-input type="text"  placeholder="Phone" :value="user.phone" v-model="form.phone"></b-form-input>
         </b-form-group>
       </b-col>
-      <b-col sm="8">
+      <b-col sm="4">
         <b-form-group>
-          <label for="city">Street</label>
-          <b-form-input type="text"  placeholder="Phone" ></b-form-input>
+          <label for="country">Country</label>
+          <b-form-input type="text"  placeholder="Country name" :value="user.address.country" v-model="form.address.country"></b-form-input>
         </b-form-group>
       </b-col>
       <b-col sm="4">
         <b-form-group>
-          <label for="postal-code">Postal Code</label>
-          <b-form-input type="text"  placeholder="Postal Code"></b-form-input>
+          <label for="country">City</label>
+          <b-form-input type="text"  placeholder="Country name" :value="user.address.city" v-model="form.address.city"></b-form-input>
+        </b-form-group>
+      </b-col>
+      <b-col sm="4">
+        <b-form-group>
+          <label for="country">State</label>
+          <b-form-input type="text"  placeholder="State" :value="user.address.state" v-model="form.address.state"></b-form-input>
+        </b-form-group>
+      </b-col>
+      <b-col sm="8">
+        <b-form-group>
+          <label for="city">Street</label>
+          <b-form-input type="text"  placeholder="Street" :value="user.address.street"  v-model="form.address.street"></b-form-input>
+        </b-form-group>
+      </b-col>
+      <b-col sm="4">
+        <b-form-group>
+          <label for="postal-code">ZIP Code</label>
+          <b-form-input type="text"  placeholder="Postal Code" :value="user.address.zip" v-model="form.address.zip"></b-form-input>
         </b-form-group>
       </b-col>
     </b-row>
-    <b-form-group>
-      <label for="country">Country</label>
-      <b-form-input type="text"  placeholder="Country name"></b-form-input>
-    </b-form-group>
+    
     <div class="form-actions">
       <b-button v-if="!loading" type="submit" variant="warning" class="mr-2">Save changes</b-button>
       <b-button v-if="loading" variant="warning" class="mr-2" disabled>Save changes <i class="fa fa-spinner fa-spin"/></b-button>
@@ -62,7 +77,9 @@ export default {
   data() {
     return{
       loading: false,
-      form: {}
+      form: {
+        address: {}
+      }
     }
   },
 

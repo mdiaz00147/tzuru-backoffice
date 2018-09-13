@@ -4,7 +4,10 @@
     <div class="drop__zone-container ">
       <div class="row">
         <div v-for="item in images64">
-          <img :src="item['base']" alt="" class="img-thumbnail drop__zone-image ml-2" >
+          <div>
+            <img :src="item['base']" alt="" class="img-thumbnail drop__zone-image ml-2" >
+            <i class="fa fa-times text-danger" @click="destroyImage(item)"></i>
+          </div>
         </div> 
       </div>
       <div class="d-flex justify-content-center align-items-center">
@@ -44,6 +47,9 @@
 
 <script>
 import { serverBus } from '@/main'
+import axios from 'axios'
+import config from '@/config/settings'
+import _ from 'lodash'
 
 export default {
   name:'DropZone',
@@ -58,6 +64,14 @@ export default {
     serverBus.$on('inventoryFormReset', () => {
       this.images64 = []
       loading: false
+    })
+    serverBus.$on('inventoryEditProduct', (val) => {
+      this.images64 = val.map((prod) => {
+        return {
+          uuid: prod.uuid,
+          base: prod.original
+        }
+      })
     })
   },
 
@@ -80,7 +94,51 @@ export default {
     selectInput() {
       let element = document.getElementById("filestyle-0")
       element.click()
+    },
+
+    destroyImage(item){
+      if (!item.uuid) this.removeLocal(item)
+      else axios.delete(config.defaultURL + '/api/v1/desk/stores/' + config.userStore().uuid + '/mult_images/' + item.uuid, {
+        headers: {
+          "content-type": "application/json",
+          Authorization: localStorage.getItem("auth_token")
+        }
+      })
+      .then(response => {
+        if (response.status == 200) {
+          this.$toasted.show('Image removed', { 
+            position:'top-right', 
+            duration: 5000,
+            type: 'success',
+            closeOnSwipe: true
+          })
+          this.removedOnServer(item)
+        }
+      })
+      .catch((error) => {
+        error.response.data.map((m) => {
+          this.$toasted.show(m, { 
+            position:'top-right', 
+            duration: 5000,
+            type: 'error',
+            closeOnSwipe: true
+          })
+        })
+      })
+    },
+
+    removedOnServer(item){
+      let arr = this.images64
+          arr = arr.map((m) => { if(m.uuid != item.uuid) return m })
+      this.images64 = _.compact(arr)
+    },
+
+    removeLocal(item){
+      let arr = this.images64
+          arr = arr.map((m) => { if(m.base != item.base) return m })
+      this.images64 = _.compact(arr)
     }
+
   }
 }
 </script>

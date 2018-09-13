@@ -19,6 +19,7 @@ const StoreMenus  = () => import('@/views/storeMenus/StoreMenus')
 const StoreSections  = () => import('@/views/storeSections/StoreSections')
 const InventoryList  = () => import('@/views/inventory/List/List')
 const InventoryNew = () => import('@/views/inventory/New/New')
+const Customers  = () => import('@/views/customers/Customers')
 
 Vue.use(Router)
 
@@ -114,6 +115,46 @@ export default new Router({
           component: InventoryNew,
           meta: {
             label: 'New Inventory'
+          }
+        },
+        {
+          path: 'edit/:uuid',
+          name: 'InventoryNew',
+          component: InventoryNew,
+          meta: {
+            label: 'Edit product' 
+          }
+        }
+
+      ]
+    },
+    {
+      path: '/customers',
+      name: 'ERP',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'list',
+          name: 'InventoryList',
+          component: Customers,
+          meta: {
+            label: 'Store Customers'
+          }
+        },
+        {
+          path: 'new',
+          name: 'InventoryNew',
+          component: InventoryNew,
+          meta: {
+            label: 'New Customer'
+          }
+        },
+        {
+          path: 'edit/:uuid',
+          name: 'InventoryNew',
+          component: InventoryNew,
+          meta: {
+            label: 'Edit Customer' 
           }
         }
 

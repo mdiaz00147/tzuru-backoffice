@@ -1,6 +1,7 @@
 <template>
   <div>
-    <top-nav :activeNew="true"/>
+    <top-nav v-if="!this.edit_mode" :activeNew="true"/>
+    <top-nav v-if="this.edit_mode" :activeEdit="true"/>
     <b-card no-body style="border-top: none;">
       <b-card-body>
         <form @submit="createProduct">
@@ -93,24 +94,31 @@
               >
               <b-form-checkbox-group stacked>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" value="1"  v-model="form.publish" >
+                  <input type="checkbox" class="custom-control-input" id="customChk1"   v-model="form.publish" >
                   <label class="custom-control-label" for="customChk1">Product published</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" value="2"  v-model="form.featured">
+                  <input type="checkbox" class="custom-control-input" id="customChk2"   v-model="form.featured">
                   <label class="custom-control-label" for="customChk2">Product featured</label>
                 </div>
               </b-form-checkbox-group>
             </b-form-group>
           </b-row>
+          <hr>
           <div class="form-actions">
-            <b-button v-if="!loading" type="submit" variant="warning mr-2">Create Now!</b-button>
-            <b-button v-if="loading" variant="warning mr-2" disabled="">Creating <i class="fa fa-spinner fa-spin" /></b-button>
-            <b-button type="button" variant="secondary" @click="reset">Reset</b-button>
+            <div v-if="this.edit_mode">
+              <b-button v-if="!loading" type="submit" variant="primary mr-2">Save changes <i class="icon-cloud-upload" /></b-button>
+              <b-button v-if="loading" variant="primary mr-2" disabled="">Loading <i class="fa fa-spinner fa-spin" /></b-button>
+              <b-button type="button" variant="danger" disabled>Delete product</b-button>
+            </div>
+            <div v-else>
+              <b-button v-if="!loading" type="submit" variant="warning mr-2">Create Now!</b-button>
+              <b-button v-if="loading" variant="warning mr-2" disabled>Loading <i class="fa fa-spinner fa-spin" /></b-button>
+              <b-button type="button" variant="secondary" @click="reset">Reset</b-button>
+            </div>
           </div>
         </form>
       </b-card-body>
-        
     </b-card>
   </div>
 </template>
@@ -121,6 +129,7 @@ import DropZone from './DropZone/DropZone'
 import axios from 'axios'
 import config from '@/config/settings'
 import { serverBus } from '@/main'
+import Vue from 'vue'
 
 export default {
   name:'InventoryNew',
@@ -131,6 +140,8 @@ export default {
 
   data(){
     return {
+      product_uuid: false,
+      edit_mode: false,
       loading: false,
       form: {
         images:[],
@@ -139,29 +150,81 @@ export default {
     }
   },
 
+  beforeRouteLeave(to, from , next) {
+    this.edit_mode = false
+    this.product_uuid = false
+    this.form =  {
+      images:[],
+      publish: true
+    }
+    serverBus.$emit('inventoryFormReset')
+    next()
+  },
+
   created(){
+    if (this.$route.params.uuid) {
+      this.edit_mode = true
+      this.product_uuid = this.$route.params.uuid
+      this.fetchProduct(this.$route.params.uuid)
+    }
     serverBus.$on('inventoryDropZoneUpdated', (val) => this.form.images.push(val))
   },
 
   methods: {
-    createProduct(evt){
-      evt.preventDefault()
+    fetchProduct(uuid){
       this.loading = true
-      axios.post(config.defaultURL + '/api/v1/desk/stores/' + config.userStore().uuid + '/products', this.form, {
+      axios.get(config.defaultURL + '/api/v1/desk/stores/' + config.userStore().uuid + '/products/' + uuid, {
         headers: {
           "content-type": "application/json",
           Authorization: localStorage.getItem("auth_token")
         }
       })
       .then(response => {
-        if (response.status == 201) {
-          this.$toasted.show('Product successfully created', { 
+        if (response.status == 200) {
+          this.form = response.data
+          this.loading = false
+          serverBus.$emit('inventoryEditProduct', response.data.images)
+        }
+      })
+      .catch((error) => {
+        error.response.data.map((m) => {
+          this.$toasted.show(m, { 
+            position:'top-right', 
+            duration: 5000,
+            type: 'error',
+            closeOnSwipe: true
+          })
+          this.loading = false
+        })
+      })
+    },
+
+    createProduct(evt){
+      evt.preventDefault()
+      let url
+      let method = this.edit_mode ? ('PUT') : ('POST')
+      if(!this.edit_mode) url =  config.defaultURL + '/api/v1/desk/stores/' + config.userStore().uuid + '/products'
+      if(this.edit_mode) url =  config.defaultURL + '/api/v1/desk/stores/' + config.userStore().uuid + '/products/' + this.product_uuid
+      this.loading = true
+      axios({
+        url:url,
+        data:this.form,
+        method:method,
+        headers: {
+          "content-type": "application/json",
+          Authorization: localStorage.getItem("auth_token")
+        }
+      })
+      .then(response => {
+        if (response.status == 201 || response.status == 200) {
+          let msg = this.edit_mode ? ('Product successfully updated') : ('Product successfully created')
+          this.$toasted.show(msg, { 
             position:'top-right', 
             duration: 5000,
             type: 'success',
             closeOnSwipe: true
           })
-          this.reset()
+          if (!this.edit_mode) this.reset()
           this.loading = false
         }
       })
@@ -188,24 +251,3 @@ export default {
   }
 }
 </script>
-
-<!-- :name,
-  :sku,
-  :weight,
-  :length,
-  :width,
-  :height,
-  :slug,
-  :price,
-  :regular_price,
-  :promo_price,
-  :featured,
-  :publish,
-  :short_description,
-  :description,
-
-  :stock_quantity,
-  :stock_status,
-  :category_ids,
-  :tax_class_id,
-  :provider_id) -->

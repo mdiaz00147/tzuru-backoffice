@@ -33,7 +33,7 @@ export default {
     },
     {
       name: 'Customers',
-      url: '/theme/colors',
+      url: '/customers/list',
       icon: 'icon-people'
     },
     {

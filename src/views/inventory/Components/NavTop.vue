@@ -6,6 +6,9 @@
     <b-nav-item :active="activeNew" :to="{name:'InventoryNew'}">
       New <i class="icon-plus" />
     </b-nav-item>
+    <b-nav-item v-if="activeEdit" :active="activeEdit" >
+      Edit <i class="icon-cloud-upload" />
+    </b-nav-item>
     <b-nav-item  >
       Import <i class="icon-cloud-upload" />
     </b-nav-item>
@@ -19,6 +22,9 @@ export default {
       type: Boolean
     },
     activeNew: {
+      type: Boolean
+    },
+    activeEdit: {
       type: Boolean
     }
   },
